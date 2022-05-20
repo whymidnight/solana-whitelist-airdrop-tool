@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gagliardetto/solana-go"
 	atok "github.com/gagliardetto/solana-go/programs/associated-token-account"
@@ -186,6 +187,7 @@ func airdrop() {
 				Build(),
 		)
 
+		time.Sleep(100 * time.Millisecond)
 		txSignature := utils.SendTx(
 			"airdrop",
 			instructions,
