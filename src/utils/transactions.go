@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/gagliardetto/solana-go"
-	"github.com/gagliardetto/solana-go/text"
 
 	"github.com/gagliardetto/solana-go/rpc"
 )
@@ -49,7 +47,7 @@ func SendTx(
 		return nil
 	}
 
-	tx.EncodeTree(text.NewTreeEncoder(os.Stdout, doc))
+	// tx.EncodeTree(text.NewTreeEncoder(os.Stdout, doc))
 	sig, err := rpcClient.SendEncodedTransaction(context.TODO(), tx.MustToBase64())
 	if err != nil {
 		fmt.Println(err)
@@ -59,17 +57,17 @@ func SendTx(
 	return &sig
 }
 
-func VerifyTransactionSignature(txSignature string) bool {
-	rpcClient := rpc.New(NETWORK)
+func VerifyTransactionSignature(rpcClient *rpc.Client, txSignature string) bool {
+	if txSignature == "" {
+		return false
+	}
 
 	transaction, err := rpcClient.GetTransaction(context.TODO(), solana.MustSignatureFromBase58(txSignature), nil)
 	if err != nil {
+		log.Println(err)
 		return false
 	}
 	if transaction == nil {
-		return false
-	}
-	if &err == nil {
 		return false
 	}
 
